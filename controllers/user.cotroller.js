@@ -54,12 +54,13 @@ exports.signin = async (req, res) => {
 					}
 				);
 
-				const { fullName, email, username } = user;
+				const { _id, fullName, email, username } = user;
 				res.cookie("token", token, { httpOnly: true });
 
 				return res.status(200).json({
 					token,
 					user: {
+						_id,
 						fullName,
 						email,
 						username,

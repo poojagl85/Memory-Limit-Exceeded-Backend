@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const categoryRoutes = require("./routes/category.route");
 const userRoutes = require("./routes/user.route");
 const questionRoutes = require("./routes/questions.route");
+const fakeRoutes = require("./routes/faker.route");
 
 // enviroment variables, constants
 require("dotenv").config();
@@ -37,6 +38,7 @@ app.use(express.json());
 app.use("/api", questionRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", userRoutes);
+app.use("/api", fakeRoutes);
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);

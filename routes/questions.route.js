@@ -5,6 +5,7 @@ const router = express.Router();
 const { requireSignin } = require("../middlewares/index");
 
 router.post("/question/create", requireSignin, postQuestion);
+
 router.post("/:slug/addSolution", requireSignin, addSolution);
 
 module.exports = router;

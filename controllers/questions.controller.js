@@ -16,19 +16,21 @@ exports.postQuestion = async (req, res) => {
 			authorID: req.user._id,
 		});
 
+		console.log(categoryId);
+
 		const _question = await question.save();
 		const userId = _question.authorID;
 
-		for (let cat of categoryId) {
-			const _cat = await Category.updateOne(
-				{ _id: cat },
-				{
-					$push: {
-						questionId: _question._id,
-					},
-				}
-			);
-		}
+		const _cat = await Category.updateOne(
+			{ _id: categoryId },
+			{
+				$push: {
+					questionId: _question._id,
+				},
+			}
+		);
+
+		console.log(_cat);
 
 		const _user = await User.updateOne(
 			{ _id: userId },

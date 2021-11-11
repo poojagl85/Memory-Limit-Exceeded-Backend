@@ -19,12 +19,12 @@ const questionSchema = mongoose.Schema(
 			ref: "User",
 			required: true,
 		},
-		categoryId: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Category",
-			},
-		],
+		categoryId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Category",
+			required: true,
+		},
+
 		solutionId: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
