@@ -54,3 +54,50 @@ exports.postQuestion = async (req, res) => {
 		});
 	}
 };
+
+exports.getQuestions = async (req, res) => {
+	try {
+		const pageNumber = req.query.page;
+
+		const skip = (pageNumber - 1) * 10;
+
+		const questions = await Question.find({})
+			.skip(skip)
+			.limit(10)
+			.populate("authorID");
+		console.log(questions);
+		return res.status(200).json({
+			questions,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
+		});
+	}
+};
+
+exports.getQuestionDetail = async (req, res) => {
+	try {
+		const slug = req.query.slug;
+		const question = await Question.findOne({ slug: slug })
+			.populate("authorID", "fullName email username")
+			.populate({
+				path: "solutionId",
+				populate: {
+					path: "authorID",
+					select: "fullName email username",
+				},
+			})
+			.populate("categoryId", );
+
+		return res.status(200).json({
+			question,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
+		});
+	}
+};

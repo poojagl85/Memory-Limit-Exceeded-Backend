@@ -4,6 +4,8 @@ const User = require("../models/user.model");
 
 exports.addSolution = async (req, res) => {
 	try {
+		console.log(req.body);
+		console.log(req.user._id);
 		const { description, questionId } = req.body;
 		const authorID = req.user._id;
 
@@ -33,6 +35,7 @@ exports.addSolution = async (req, res) => {
 			}
 		);
 
+		console.log(_solution);
 		return res.status(200).json({
 			message: `Solution added... !`,
 			solution: _solution,

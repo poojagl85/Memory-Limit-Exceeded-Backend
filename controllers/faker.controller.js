@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const Category = require("../models/category.model");
 const Question = require("../models/questions.model");
 const { default: slugify } = require("slugify");
+const Solution = require("../models/solution.model");
 
 exports.createFakeUser = async (req, res) => {
 	try {
@@ -58,7 +59,7 @@ exports.createQuestion = async (req, res) => {
 			const idx = parseInt(Math.random() * categories.length);
 			const categoryId = categories[idx]._id;
 			const authorID = users[parseInt(Math.random() * users.length)]._id;
-			const slug = slugify("title");
+			const slug = slugify(title);
 
 			const _question = new Question({
 				title,
@@ -90,6 +91,55 @@ exports.createQuestion = async (req, res) => {
 
 		return res.status(200).json({
 			message: "Data created",
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
+		});
+	}
+};
+
+exports.addSolution = async (req, res) => {
+	try {
+		const questions = await Question.find({});
+		const users = await User.find({});
+
+		for (let i = 0; i <= 200; i++) {
+			let description = faker.lorem.paragraphs();
+			const authorID = users[parseInt(Math.random() * users.length)]._id;
+			const questionId =
+				questions[parseInt(Math.random() * questions.length)]._id;
+
+			const _sol = new Solution({
+				authorID,
+				description,
+				questionId,
+			});
+
+			_sol.save();
+
+			const _user = await User.updateOne(
+				{ _id: authorID },
+				{
+					$push: {
+						activityId: _sol._id,
+					},
+				}
+			);
+
+			const q = await Question.updateOne(
+				{ _id: questionId },
+				{
+					$push: {
+						solutionId: _sol._id,
+					},
+				}
+			);
+		}
+
+		return res.status(200).json({
+			message: "Solutions created",
 		});
 	} catch (error) {
 		console.log(error);

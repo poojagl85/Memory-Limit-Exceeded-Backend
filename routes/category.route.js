@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/category/create", createCategory);
 router.get("/category/getCategory", getAllCategories);
-router.get("/getquestions", requireSignin, getQuestions);
+
 
 module.exports = router;
