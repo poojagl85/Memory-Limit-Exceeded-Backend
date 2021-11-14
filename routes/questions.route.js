@@ -7,6 +7,7 @@ const {
 const { addSolution } = require("../controllers/solution.controller");
 const router = express.Router();
 const { requireSignin } = require("../middlewares/index");
+const { verifyContent } = require("../middlewares/moderator");
 
 router.post("/question/create", requireSignin, postQuestion);
 router.get("/getquestions", requireSignin, getQuestions);
