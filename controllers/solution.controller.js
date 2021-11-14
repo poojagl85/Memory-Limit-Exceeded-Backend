@@ -7,24 +7,46 @@ const toxicity = require("@tensorflow-models/toxicity");
 
 const threshold = 0.9;
 
-const getMaliciousPredictions = (predictions) => {
-  try {
-    for (let prediction of predictions) {
-      console.log(prediction.label + " " + prediction.results[0].match);
-      if (prediction.results[0].match === true) {
-        throw new Error(
+const getMaliciousPredictions = (predictions, callback) => {
+  console.log(predictions);
+  for (let prediction of predictions) {
+    console.log(prediction.label + " " + prediction.results[0].match);
+    if (prediction.results[0].match === true) {
+      return callback(
+        new Error(
           `Your solution/question could not be posted as it consisted of content falling in ${prediction.label} category.`
-        );
-      }
+        ),
+        null
+      );
     }
-	return {message: "Success"};
-  } catch (error) {
-	  throw new Error(error.message);
   }
 
- 
+  return callback(null, "Success");
 };
 
+// const getSumAsync = (num1, num2, callback) => {
+
+// 	if (!num1 || !num2) {
+// 	  return callback(new Error("Missing arguments"), null);
+// 	}
+// 	return callback(null, num1 + num2);
+//   }
+//   getSumAsync(1, 1, (err, result) => {
+// 	if (err){
+// 	  doSomethingWithError(err)
+// 	}else {
+// 	  console.log(result) // 2
+// 	}
+//   })
+
+//   const getSumPromise = promisify(getSumAsync) // step 1
+// getSumPromise(1, 1) // step 2
+// .then(result => {
+//   console.log(result)
+// })
+// .catch(err =>{
+//   doSomethingWithError(err);
+// })
 
 exports.addSolution = async (req, res) => {
   try {
@@ -35,40 +57,30 @@ exports.addSolution = async (req, res) => {
       const sentences = [req.body.description];
 
       model.classify(sentences).then((predictions) => {
-        // getMaliciousPredictions(predictions , (err, result) => {
-        // 	if(err){
-        // 		console.log(err);
-        // 	}else{
-        // 		console.lod(result);
-        // 	}
-        // })
-
         const promise = promisify(getMaliciousPredictions);
-        promise(predictions)
-          .then((result) => {
-			console.log(result);
-            console.log("In then block");
-            return res.status(200).json({
-              message: `Solution added... !`,
-            });
-          })
-          .catch((err) => {
-            console.log("In catch block");
+        promise(predictions, (err, result) => {
+          if (err) {
+            console.log("In promise callback error block");
             return res.status(403).json({
               message: err.message,
             });
-          });
+          } else {
+            console.log("In promise callback result  block");
+            return res.status(200).json({
+              message: `Solution added... !`,
+            });
+          }
+
+          // const { description, questionId } = req.body;
+          // const authorID = req.user._id;
+
+          // const solution = new Solution({
+          // 	description,
+          // 	questionId,
+          // 	authorID,
+        });
       });
     });
-
-    // const { description, questionId } = req.body;
-    // const authorID = req.user._id;
-
-    // const solution = new Solution({
-    // 	description,
-    // 	questionId,
-    // 	authorID,
-    // });
 
     // const _solution = await solution.save();
 
