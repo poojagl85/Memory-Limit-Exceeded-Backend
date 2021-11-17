@@ -145,3 +145,17 @@ exports.getQuestionDetail = async (req, res) => {
 		});
 	}
 };
+
+exports.searchQuestion = async (req, res) => {
+	const name = req.query.name;
+	var regex = new RegExp(name, 'i');
+	Question.find({ description: name, title: name }).then((res) => {
+		return res.status(200).JSON({
+			questions: res
+		})
+	}).catch((err) => {
+		return res.status(500).json({
+			error: "Internal Server Error",
+		})
+	})
+}

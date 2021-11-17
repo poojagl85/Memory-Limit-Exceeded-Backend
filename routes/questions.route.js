@@ -13,5 +13,6 @@ router.post("/question/create", requireSignin, postQuestion);
 router.get("/getquestions", requireSignin, getQuestions);
 router.get("/question", getQuestionDetail);
 router.post("/:id/addSolution", requireSignin, addSolution);
+// router.post("/search", requireSignin, searchQuestion);
 
 module.exports = router;

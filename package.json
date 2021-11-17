@@ -20,8 +20,10 @@
     "express-jwt": "^6.1.0",
     "express-validator": "^6.13.0",
     "faker": "^5.5.3",
+    "googleapis": "^91.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
+    "nodemailer": "^6.7.1",
     "nodemon": "^2.0.15",
     "slugify": "^1.6.2"
   }

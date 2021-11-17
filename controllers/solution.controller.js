@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const { promisify } = require("util");
 require("@tensorflow/tfjs");
 const toxicity = require("@tensorflow-models/toxicity");
+const { sendMail } = require('./nodemailer');
 
 const threshold = 0.9;
 
@@ -32,6 +33,7 @@ getMaliciousPredictions[promisify.custom] = (predictions) => {
 
 exports.addSolution = async (req, res) => {
   try {
+    console.log(req.body);
     await toxicity.load(threshold).then((model) => {
       const sentences = [req.body.description];
 
@@ -40,37 +42,42 @@ exports.addSolution = async (req, res) => {
         maliciousPredictions(predictions)
           .then(async (result) => {
             const { description, questionId } = req.body;
+            const { question } = req.body;
             const authorID = req.user._id;
 
             const solution = new Solution({
-            	description,
-            	questionId,
-            	authorID,
+              description,
+              questionId,
+              authorID,
             });
 
             const _solution = await solution.save();
 
             await Question.updateOne(
-            	{ _id: questionId },
-            	{
-            		$push: {
-            			solutionId: _solution._id,
-            		},
-            	}
+              { _id: questionId },
+              {
+                $push: {
+                  solutionId: _solution._id,
+                },
+              }
             );
+
+
 
             await User.updateOne(
-            	{ _id: authorID },
-            	{
-            		$push: {
-            			activityId: _solution._id,
-            		},
-            	}
+              { _id: authorID },
+              {
+                $push: {
+                  activityId: _solution._id,
+                },
+              }
             );
 
-            console.log(_solution);
+            sendMail(req.body.question.authorID.email, `<p>A solution to your question <a href="http://localhost:8080/${question.slug}">${question.title} has been posted</a></p>`);
+            console.log('email sent');
             return res.status(200).json({
               message: result.msg,
+              solution: _solution
             });
           })
           .catch((err) => {
