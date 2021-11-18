@@ -3,6 +3,7 @@ const {
 	postQuestion,
 	getQuestions,
 	getQuestionDetail,
+	searchQuestion,
 } = require("../controllers/questions.controller");
 const { addSolution } = require("../controllers/solution.controller");
 const router = express.Router();
@@ -13,6 +14,6 @@ router.post("/question/create", requireSignin, postQuestion);
 router.get("/getquestions", requireSignin, getQuestions);
 router.get("/question", getQuestionDetail);
 router.post("/:id/addSolution", requireSignin, addSolution);
-// router.post("/search", requireSignin, searchQuestion);
+router.get("/search", requireSignin, searchQuestion);
 
 module.exports = router;

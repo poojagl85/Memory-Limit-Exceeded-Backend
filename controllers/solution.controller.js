@@ -10,7 +10,6 @@ const threshold = 0.9;
 
 const getMaliciousPredictions = (predictions, onSuccess, onError) => {
   for (let prediction of predictions) {
-    console.log(prediction.label + " " + prediction.results[0].match);
     if (prediction.results[0].match === true) {
       onError({
         msg: `Your solution/question could not be posted as it consisted of content falling in ${prediction.label} category.`,
@@ -33,7 +32,6 @@ getMaliciousPredictions[promisify.custom] = (predictions) => {
 
 exports.addSolution = async (req, res) => {
   try {
-    console.log(req.body);
     await toxicity.load(threshold).then((model) => {
       const sentences = [req.body.description];
 
@@ -74,7 +72,7 @@ exports.addSolution = async (req, res) => {
             );
 
             sendMail(req.body.question.authorID.email, `<p>A solution to your question <a href="http://localhost:8080/${question.slug}">${question.title} has been posted</a></p>`);
-            console.log('email sent');
+            ('email sent');
             return res.status(200).json({
               message: result.msg,
               solution: _solution

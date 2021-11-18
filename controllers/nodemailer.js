@@ -9,8 +9,6 @@ exports.sendMail = async (sender, msg) => {
             oAuth2Client.setCredentials({
                   refresh_token: process.env.REFRESH_TOKEN
             })
-
-            console.log(process.env.REFRESH_TOKEN);
             const accessToken = await oAuth2Client.getAccessToken();
             const transport = nodemailer.createTransport({
                   service: 'gmail',

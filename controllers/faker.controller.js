@@ -49,7 +49,6 @@ exports.createFakeUser = async (req, res) => {
 
 exports.createQuestion = async (req, res) => {
 	try {
-		console.log("hi");
 		const categories = await Category.find({});
 		const users = await User.find({});
 

@@ -50,7 +50,7 @@ exports.postQuestion = async (req, res) => {
 							authorID: req.user._id,
 						});
 
-						console.log(categoryId);
+
 
 						const _question = await question.save();
 						const userId = _question.authorID;
@@ -64,7 +64,7 @@ exports.postQuestion = async (req, res) => {
 							}
 						);
 
-						console.log(_cat);
+
 
 						const _user = await User.updateOne(
 							{ _id: userId },
@@ -81,15 +81,14 @@ exports.postQuestion = async (req, res) => {
 								_question,
 							},
 						});
-					}).catch((err) => {
+					})
+					.catch((err) => {
 						return res.status(403).json({
 							message: err.msg,
 						});
 					});
-
-			})
-		})
-
+			});
+		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
@@ -104,7 +103,6 @@ exports.getQuestions = async (req, res) => {
 
 		const skip = (pageNumber - 1) * 10;
 		const user = await User.findById(req.query.id);
-
 
 		const questions = await Question.find({ categoryId: user.categoryId })
 			.skip(skip)
@@ -133,7 +131,7 @@ exports.getQuestionDetail = async (req, res) => {
 					select: "fullName email username",
 				},
 			})
-			.populate("categoryId",);
+			.populate("categoryId");
 
 		return res.status(200).json({
 			question,
@@ -147,15 +145,26 @@ exports.getQuestionDetail = async (req, res) => {
 };
 
 exports.searchQuestion = async (req, res) => {
-	const name = req.query.name;
-	var regex = new RegExp(name, 'i');
-	Question.find({ description: name, title: name }).then((res) => {
-		return res.status(200).JSON({
-			questions: res
+	const name = req.query.search;
+	if (name === '') return res.status(200).json({
+		questions: [],
+	});
+	const pageNumber = req.query.page;
+	const skip = (pageNumber - 1) * 10;
+	var regex = new RegExp(name, "i");
+	Question.find({ description: regex, title: regex })
+		.skip(skip)
+		.limit(10)
+		.then((result) => {
+			// console.log(result);
+			return res.status(200).json({
+				questions: result,
+			});
 		})
-	}).catch((err) => {
-		return res.status(500).json({
-			error: "Internal Server Error",
-		})
-	})
-}
+		.catch((err) => {
+			console.log(err);
+			return res.status(500).json({
+				error: "Internal Server Error",
+			});
+		});
+};
