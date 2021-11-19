@@ -55,6 +55,7 @@ exports.signin = async (req, res) => {
 				);
 
 				const { _id, fullName, email, username } = user;
+				console.log(token);
 				res.cookie("token", token, { httpOnly: true });
 
 				return res.status(200).json({
