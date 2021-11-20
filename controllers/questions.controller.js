@@ -95,17 +95,20 @@ exports.postQuestion = async (req, res) => {
 
 exports.getQuestions = async (req, res) => {
 	try {
+
 		const pageNumber = req.query.page;
+		const limit = 15;
 
 		const skip = (pageNumber - 1) * 10;
 		const user = await User.findById(req.query.id);
+		console.log(user);
 
 		const query = req.query.query;
 		let questions = [];
 		if (query === "none") {
 			questions = await Question.find({ categoryId: user.categoryId })
 				.skip(skip)
-				.limit(10)
+				.limit(limit)
 				.populate("authorID", "email fullName _id username");
 		} else {
 			const value = req.query.value;
@@ -114,7 +117,7 @@ exports.getQuestions = async (req, res) => {
 				questions = await Question.find({ categoryId: user.categoryId })
 					.sort({ createdAt: value })
 					.skip(skip)
-					.limit(10)
+					.limit(limit)
 					.populate("authorID", "email fullName _id username");
 			} else {
 				questions = await Question.aggregate(
@@ -141,7 +144,7 @@ exports.getQuestions = async (req, res) => {
 						},
 						{ $sort: { answerLength: parseInt(value) } },
 						{ $skip: skip },
-						{ $limit: 10 },
+						{ $limit: limit },
 					],
 
 				)

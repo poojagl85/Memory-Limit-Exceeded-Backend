@@ -55,11 +55,12 @@ exports.signin = async (req, res) => {
 				);
 
 				const { _id, fullName, email, username } = user;
-				console.log(token);
+
 				res.cookie("token", token, { httpOnly: true });
 
 				return res.status(200).json({
-					token,
+					message: "Signin successful..!",
+
 					user: {
 						_id,
 						fullName,
@@ -84,3 +85,21 @@ exports.signin = async (req, res) => {
 		});
 	}
 };
+
+
+exports.signout = async (req, res) => {
+
+	try {
+		res.clearCookie("token");
+
+		return res.status(200).json({
+			message: "Signout successful"
+		})
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
+		});
+	}
+
+}

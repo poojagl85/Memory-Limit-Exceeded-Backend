@@ -71,7 +71,7 @@ exports.addSolution = async (req, res) => {
               }
             );
 
-            sendMail(req.body.question.authorID.email, `<p>A solution to your question <a href="http://localhost:8080/${question.slug}">${question.title} has been posted</a></p>`);
+            sendMail(req.body.question.authorID.email, `<p>A solution to your question <a href="http://localhost:8080/${question.slug}">${question.title}</a> has been posted</p>`);
             ('email sent');
             return res.status(200).json({
               message: result.msg,
