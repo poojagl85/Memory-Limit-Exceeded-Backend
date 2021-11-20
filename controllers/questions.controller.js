@@ -50,8 +50,6 @@ exports.postQuestion = async (req, res) => {
 							authorID: req.user._id,
 						});
 
-
-
 						const _question = await question.save();
 						const userId = _question.authorID;
 
@@ -63,8 +61,6 @@ exports.postQuestion = async (req, res) => {
 								},
 							}
 						);
-
-
 
 						const _user = await User.updateOne(
 							{ _id: userId },
@@ -104,10 +100,54 @@ exports.getQuestions = async (req, res) => {
 		const skip = (pageNumber - 1) * 10;
 		const user = await User.findById(req.query.id);
 
-		const questions = await Question.find({ categoryId: user.categoryId })
-			.skip(skip)
-			.limit(10)
-			.populate("authorID");
+		const query = req.query.query;
+		let questions = [];
+		if (query === "none") {
+			questions = await Question.find({ categoryId: user.categoryId })
+				.skip(skip)
+				.limit(10)
+				.populate("authorID", "email fullName _id username");
+		} else {
+			const value = req.query.value;
+			if (query === "createdAt") {
+
+				questions = await Question.find({ categoryId: user.categoryId })
+					.sort({ createdAt: value })
+					.skip(skip)
+					.limit(10)
+					.populate("authorID", "email fullName _id username");
+			} else {
+				questions = await Question.aggregate(
+					[
+						{
+							$match: {
+								categoryId: {
+									$in: user.categoryId
+								}
+							},
+
+						},
+						{
+							$project: {
+								title: 1,
+								slug: 1,
+								description: 1,
+								authorID: 1,
+								categoryId: 1,
+								solutionId: 1,
+								createdAt: 1,
+								answerLength: { $size: "$solutionId" },
+							},
+						},
+						{ $sort: { answerLength: parseInt(value) } },
+						{ $skip: skip },
+						{ $limit: 10 },
+					],
+
+				)
+				await Question.populate(questions, { path: 'authorID', select: "fullName email _id username" })
+			}
+		}
 		return res.status(200).json({
 			questions,
 		});
@@ -146,9 +186,10 @@ exports.getQuestionDetail = async (req, res) => {
 
 exports.searchQuestion = async (req, res) => {
 	const name = req.query.search;
-	if (name === '') return res.status(200).json({
-		questions: [],
-	});
+	if (name === "")
+		return res.status(200).json({
+			questions: [],
+		});
 	const pageNumber = req.query.page;
 	const skip = (pageNumber - 1) * 10;
 	var regex = new RegExp(name, "i");

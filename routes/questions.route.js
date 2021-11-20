@@ -11,7 +11,7 @@ const { requireSignin } = require("../middlewares/index");
 const { verifyContent } = require("../middlewares/moderator");
 
 router.post("/question/create", requireSignin, postQuestion);
-router.get("/getquestions", requireSignin, getQuestions);
+router.get("/getquestions", getQuestions);
 router.get("/question", getQuestionDetail);
 router.post("/:id/addSolution", requireSignin, addSolution);
 router.get("/search", requireSignin, searchQuestion);
