@@ -1,10 +1,12 @@
 const Question = require("../models/questions.model");
 const Category = require("../models/category.model");
+const Solution = require("../models/solution.model");
 const User = require("../models/user.model");
 const slugify = require("slugify");
 const { promisify } = require("util");
 require("@tensorflow/tfjs");
 const toxicity = require("@tensorflow-models/toxicity");
+
 
 const threshold = 0.9;
 
@@ -188,27 +190,40 @@ exports.getQuestionDetail = async (req, res) => {
 };
 
 exports.searchQuestion = async (req, res) => {
-	const name = req.query.search;
-	if (name === "")
-		return res.status(200).json({
-			questions: [],
-		});
-	const pageNumber = req.query.page;
-	const skip = (pageNumber - 1) * 10;
-	var regex = new RegExp(name, "i");
-	Question.find({ description: regex, title: regex })
-		.skip(skip)
-		.limit(10)
-		.then((result) => {
-			// console.log(result);
+	try {
+
+		const name = req.query.search;
+		if (name === "")
 			return res.status(200).json({
-				questions: result,
+				results: [],
 			});
+		const pageNumber = req.query.page;
+		const skip = (pageNumber - 1) * 10;
+		var regex = new RegExp(name, "i");
+		let ques = [];
+		let cat = [];
+		await Question.find({ description: regex, title: regex }, { title: 1, description: 1, slug: 1, type: "question" })
+			.skip(skip)
+			.limit(10)
+			.then((result) => {
+				ques = result
+			})
+		await Category.find({ name: regex }, { name: 1, slug: 1, type: "category" }).skip(skip)
+			.limit(10).then((res) => {
+				cat = res
+			})
+		const results = ques.concat(cat);
+
+		return res.status(200).json({
+			results: results
 		})
-		.catch((err) => {
-			console.log(err);
-			return res.status(500).json({
-				error: "Internal Server Error",
-			});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
 		});
+	}
+
+
+
 };

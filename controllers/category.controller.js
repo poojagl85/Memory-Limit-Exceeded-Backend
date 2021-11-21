@@ -42,3 +42,35 @@ exports.getAllCategories = async (req, res) => {
 	}
 };
 
+// const question = await Question.findOne({ slug: slug })
+// 	.populate("authorID", "fullName email username")
+// 	.populate({
+// 		path: "solutionId",
+// 		populate: {
+// 			path: "authorID",
+// 			select: "fullName email username",
+// 		},
+// 	})
+// 	.populate("categoryId");
+exports.getCategoryDetail = async (req, res) => {
+	try {
+		const slug = req.query.slug;
+		const questions = await Category.find(
+			{ slug: slug },
+			{ questionId: 1, slug: 1 }
+		).populate({
+			path: "questionId",
+			select: "title description authorID createdAt slug solutionId",
+			populate: { path: "authorID", select: "fullName email username" },
+		});
+
+		return res.status(200).json({
+			questions: questions[0].questionId,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
+		});
+	}
+};

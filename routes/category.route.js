@@ -1,14 +1,14 @@
 const express = require("express");
-const { requireSignin } = require("../middlewares/index");
 const {
 	createCategory,
 	getAllCategories,
-	getQuestions,
+	getCategoryDetail,
 } = require("../controllers/category.controller");
 const router = express.Router();
 
 router.post("/category/create", createCategory);
 router.get("/category/getCategory", getAllCategories);
+router.get("/category", getCategoryDetail);
 
 
 module.exports = router;
