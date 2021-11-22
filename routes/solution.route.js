@@ -1,8 +1,10 @@
-// const express = require("express");
-// const { addSolution } = require("../controllers/solution.controller");
-// const router = express.Router();
-// const { requireSignin } = require("../middlewares/index");
+const express = require("express");
+const { addSolution, getSolutionDetail } = require("../controllers/solution.controller");
+const router = express.Router();
+const { requireSignin } = require("../middlewares/index");
 
-// router.post("/solution/add", requireSignin, addSolution);
+router.post("/:id/addSolution", requireSignin, addSolution);
+router.get("/solution", getSolutionDetail);
 
-// module.exports = router;
+
+module.exports = router;

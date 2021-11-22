@@ -4,9 +4,9 @@ const User = require("../models/user.model");
 const { promisify } = require("util");
 require("@tensorflow/tfjs");
 const toxicity = require("@tensorflow-models/toxicity");
-const { sendMail } = require('./nodemailer');
+const { sendMail } = require("./nodemailer");
 
-const threshold = 0.9;
+const threshold = 0.8;
 
 const getMaliciousPredictions = (predictions, onSuccess, onError) => {
   for (let prediction of predictions) {
@@ -60,8 +60,6 @@ exports.addSolution = async (req, res) => {
               }
             );
 
-
-
             await User.updateOne(
               { _id: authorID },
               {
@@ -71,11 +69,14 @@ exports.addSolution = async (req, res) => {
               }
             );
 
-            sendMail(req.body.question.authorID.email, `<p>A solution to your question <a href="http://localhost:8080/${question.slug}">${question.title}</a> has been posted</p>`);
-            ('email sent');
+            sendMail(
+              req.body.question.authorID.email,
+              `<p>A solution to your question <a href="http://localhost:8080/${question.slug}">${question.title}</a> has been posted</p>`
+            );
+            ("email sent");
             return res.status(200).json({
               message: result.msg,
-              solution: _solution
+              solution: _solution,
             });
           })
           .catch((err) => {
@@ -84,6 +85,28 @@ exports.addSolution = async (req, res) => {
             });
           });
       });
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+};
+
+exports.getSolutionDetail = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const solution = await Solution.findById(id).populate({
+      path: "commentsId",
+      select: "description authorID createdAt",
+      populate: {
+        path: "authorID",
+        select: "username fullName email",
+      },
+    });
+    return res.status(200).json({
+      solution,
     });
   } catch (error) {
     console.log(error);

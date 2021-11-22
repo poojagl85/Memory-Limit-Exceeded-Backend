@@ -15,7 +15,7 @@ const solutionSchema = mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Question",
 		},
-		comments: [
+		commentsId: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Comment",
