@@ -28,11 +28,24 @@ const userSchema = mongoose.Schema(
 				ref: "Category",
 			},
 		],
-		activityId: [
+		questionId: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Question'
 			},
 		],
+		solutionId: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Solution'
+			},
+		],
+		commentId: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Comment'
+			}
+		]
 	},
 	{
 		timestamps: true,

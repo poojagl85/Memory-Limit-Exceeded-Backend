@@ -64,7 +64,7 @@ exports.addSolution = async (req, res) => {
               { _id: authorID },
               {
                 $push: {
-                  activityId: _solution._id,
+                  solutionId: _solution._id,
                 },
               }
             );

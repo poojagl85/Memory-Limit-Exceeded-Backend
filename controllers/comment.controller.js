@@ -67,7 +67,7 @@ exports.addComment = async (req, res) => {
                                           authorID,
                                           {
                                                 $push: {
-                                                      activityId: _comment._id,
+                                                      commentId: _comment._id,
                                                 },
                                           }
                                     );

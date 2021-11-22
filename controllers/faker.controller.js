@@ -82,7 +82,7 @@ exports.createQuestion = async (req, res) => {
 				{ _id: authorID },
 				{
 					$push: {
-						activityId: _question._id,
+						questionId: _question._id,
 					},
 				}
 			);
@@ -122,7 +122,7 @@ exports.addSolution = async (req, res) => {
 				{ _id: authorID },
 				{
 					$push: {
-						activityId: _sol._id,
+						solutionId: _sol._id,
 					},
 				}
 			);

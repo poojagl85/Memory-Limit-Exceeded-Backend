@@ -41,8 +41,21 @@ exports.postQuestion = async (req, res) => {
 				const maliciousPredictions = promisify(getMaliciousPredictions);
 				maliciousPredictions(predictions)
 					.then(async (result) => {
-						const { title, description, categoryId } = req.body;
+						const { title, description, category } = req.body;
 						const slug = slugify(title);
+
+						let _category = await Category.findOne({ name: category })
+
+						if (!_category) {
+							const catObj = {
+								name: category,
+								slug: slugify(category),
+							};
+							_category = await new Category(catObj).save();
+						}
+
+						const categoryId = _category._id;
+
 
 						const question = new Question({
 							title,
@@ -68,7 +81,7 @@ exports.postQuestion = async (req, res) => {
 							{ _id: userId },
 							{
 								$push: {
-									activityId: _question._id,
+									questionId: _question._id,
 								},
 							}
 						);
@@ -81,6 +94,7 @@ exports.postQuestion = async (req, res) => {
 						});
 					})
 					.catch((err) => {
+						console.log(err);
 						return res.status(403).json({
 							message: err.msg,
 						});
