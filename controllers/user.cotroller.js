@@ -98,3 +98,22 @@ exports.signout = async (req, res) => {
 	}
 
 }
+
+exports.getUserQuestionFeed = async (req, res) => {
+	try {
+
+		const userId = req.user._id;
+		const user = await User.findById(userId, "questionId").populate("questionId", "title description slug createdAt solutionId");
+
+		return res.status(200).json({
+			user: user
+		})
+
+
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			error: "Internal Server Error",
+		});
+	}
+}

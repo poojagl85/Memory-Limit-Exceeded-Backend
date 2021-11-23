@@ -10,7 +10,6 @@ const threshold = 0.8;
 
 const getMaliciousPredictions = (predictions, onSuccess, onError) => {
       for (let prediction of predictions) {
-            console.log(prediction.label + "     " + prediction.results[0].match)
             if (prediction.results[0].match === true) {
                   onError({
                         msg: `Your comment could not be posted as it consisted of content falling in ${prediction.label} category.`,
@@ -33,7 +32,6 @@ getMaliciousPredictions[promisify.custom] = (predictions) => {
 
 exports.addComment = async (req, res) => {
       try {
-            console.log("Hi");
             await toxicity.load(threshold).then((model) => {
                   const sentences = [req.body.description];
 

@@ -117,8 +117,6 @@ exports.getQuestions = async (req, res) => {
 
 		const skip = (pageNumber - 1) * 10;
 		const user = await User.findById(req.query.id);
-		console.log(user);
-
 		const query = req.query.query;
 		let questions = [];
 		if (query === "none") {
