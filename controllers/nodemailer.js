@@ -33,6 +33,7 @@ exports.sendMail = async (sender, msg) => {
             const result = await transport.sendMail(mailOptions);
             return result
       } catch (error) {
+            console.log("In error");
             console.log(error);
             return new Error('Unable to send email...!');
       }
