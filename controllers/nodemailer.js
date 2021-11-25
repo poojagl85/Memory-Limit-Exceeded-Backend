@@ -1,11 +1,12 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, REFRESH_TOKEN } = require('../config');
 
 exports.sendMail = async (sender, msg) => {
       try {
-            const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
+            const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
             oAuth2Client.setCredentials({
-                  refresh_token: process.env.REFRESH_TOKEN
+                  refresh_token: REFRESH_TOKEN
             })
             const accessToken = await oAuth2Client.getAccessToken();
             const transport = nodemailer.createTransport({
@@ -13,9 +14,9 @@ exports.sendMail = async (sender, msg) => {
                   auth: {
                         type: 'OAuth2',
                         user: 'poojagl85@gmail.com',
-                        clientId: process.env.CLIENT_ID,
-                        clientSecret: process.env.CLIENT_SECRET,
-                        refreshToken: process.env.REFRESH_TOKEN,
+                        clientId: CLIENT_ID,
+                        clientSecret: CLIENT_SECRET,
+                        refreshToken: REFRESH_TOKEN,
                         accessToken: accessToken
                   }
             })

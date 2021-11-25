@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
 
 exports.signup = async (req, res) => {
 	try {
@@ -48,7 +49,7 @@ exports.signin = async (req, res) => {
 					{
 						_id: user._id,
 					},
-					process.env.JWT_SECRET,
+					JWT_SECRET,
 					{
 						expiresIn: "10d",
 					}

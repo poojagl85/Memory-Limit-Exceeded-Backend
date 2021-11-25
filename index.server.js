@@ -12,13 +12,12 @@ const questionRoutes = require("./routes/questions.route");
 const fakeRoutes = require("./routes/faker.route");
 const solutionRoutes = require("./routes/solution.route");
 const commentRoutes = require("./routes/comment.route");
+const { PORT, MONGO_DB_USER, MONGO_DB_PASSWORD, MONGO_DB_DATABASE } = require("./config");
 
 // enviroment variables, constants
-require("dotenv").config();
-const PORT = process.env.PORT;
-const USER = process.env.MONGO_DB_USER;
-const PASSWORD = process.env.MONGO_DB_PASSWORD;
-const DATABASE = process.env.MONGO_DB_DATABASE;
+const USER = MONGO_DB_USER;
+const PASSWORD = MONGO_DB_PASSWORD;
+const DATABASE = MONGO_DB_DATABASE;
 
 // mongodb connection
 mongoose
@@ -33,13 +32,6 @@ mongoose
 		console.log("Database connected");
 	});
 
-// var corsOptions = {
-// 	origin: "*",
-// 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// 	allowedHeaders: '*',
-// 	exposeHeaders: ['set-cookie'],
-// 	credentials: true,
-// }
 app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -56,8 +48,6 @@ app.use(express.static("build"));
 app.get("*", (req, res) => {
 	res.sendFile(path.resolve(__dirname, "build", "index.html"))
 })
-
-
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
