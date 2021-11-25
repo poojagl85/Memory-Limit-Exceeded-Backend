@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 // routes
 const categoryRoutes = require("./routes/category.route");
@@ -50,6 +51,9 @@ app.use("/api", userRoutes);
 app.use("/api", solutionRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", fakeRoutes);
+
+app.use(express.static("build"));
+
 
 
 app.listen(PORT, () => {
