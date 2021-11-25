@@ -33,14 +33,14 @@ mongoose
 		console.log("Database connected");
 	});
 
-var corsOptions = {
-	origin: "*",
-	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-	allowedHeaders: '*',
-	exposeHeaders: ['set-cookie'],
-	credentials: true,
-}
-app.use(cors(corsOptions));
+// var corsOptions = {
+// 	origin: "*",
+// 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// 	allowedHeaders: '*',
+// 	exposeHeaders: ['set-cookie'],
+// 	credentials: true,
+// }
+app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -53,6 +53,9 @@ app.use("/api", commentRoutes);
 app.use("/api", fakeRoutes);
 
 app.use(express.static("build"));
+app.get("*", (req, res) => {
+	res.sendFile(path.resolve(__dirname, "build", "index.html"))
+})
 
 
 
