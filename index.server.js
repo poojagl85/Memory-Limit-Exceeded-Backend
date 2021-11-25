@@ -32,12 +32,13 @@ mongoose
 		console.log("Database connected");
 	});
 
-// var corsOptions = {
-// 	origin: 'https://out-of-memory.vercel.app/',
-// 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// 	allowedHeaders: '*'
-// }
-app.use(cors());
+var corsOptions = {
+	origin: 'https://out-of-memory.vercel.app/',
+	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+	allowedHeaders: '*',
+	exposeHeaders: ['set-cookie']
+}
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
