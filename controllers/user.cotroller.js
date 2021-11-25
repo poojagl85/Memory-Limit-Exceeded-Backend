@@ -56,7 +56,7 @@ exports.signin = async (req, res) => {
 
 
 
-				res.cookie("token", token, { httpOnly: true, secure: true, domain: "https://out-of-memory.vercel.app", SameSite="None" });
+				res.cookie("token", token, { httpOnly: true, secure: true, domain: "out-of-memory.vercel.app", SameSite="None" });
 
 				return res.status(200).json({
 					message: "Signin successful..!",
