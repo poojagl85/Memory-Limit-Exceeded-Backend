@@ -33,7 +33,7 @@ mongoose
 	});
 
 var corsOptions = {
-	origin: 'https://out-of-memory.vercel.app',
+	origin: "*",
 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 	allowedHeaders: '*',
 	exposeHeaders: ['set-cookie']
