@@ -83,7 +83,7 @@ I have identified 9 schemas/models for the online-discussion portal.
 3. User can visit the posted solution from the homescreen
 4. User can format the text as per his choice. (Bold, font-size, font-family etc feature has been added using tinyMCE)
 
-### Posting Comments
+#### Posting Comments
 
 1. Student can add a comment to any solution.
 2. On sending the request the description of the comment will be checked by the tensorflow toxicity model
