@@ -25,7 +25,7 @@ exports.sendMail = async (sender, msg) => {
             const mailOptions = {
                   from: 'poojagl85@gmail.com',
                   to: sender,
-                  subject: 'Message from Out of Memory?',
+                  subject: 'Memory Limit Exceeded...',
                   text: msg,
                   html: msg
             }

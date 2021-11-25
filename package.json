@@ -1,5 +1,5 @@
 {
-  "name": "Out-Of-Memory-Backend",
+  "name": "Memory-Limit-Exceeded-Backend",
   "version": "1.0.0",
   "description": "This is the backend for socio-console app",
   "main": "index.js",
