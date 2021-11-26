@@ -44,10 +44,10 @@ app.use("/api", solutionRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", fakeRoutes);
 
-app.use(express.static("build"));
-app.get("*", (req, res) => {
-	res.sendFile(path.resolve(__dirname, "build", "index.html"))
-})
+// app.use(express.static("build"));
+// app.get("*", (req, res) => {
+// 	res.sendFile(path.resolve(__dirname, "build", "index.html"))
+// })
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);

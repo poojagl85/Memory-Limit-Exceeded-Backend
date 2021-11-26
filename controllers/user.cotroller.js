@@ -14,12 +14,11 @@ exports.signup = async (req, res) => {
 			});
 		}
 
-		const { fullName, email, username, password, categoryId } = req.body;
+		const { fullName, email, password, categoryId } = req.body;
 
 		const _user = new User({
 			fullName,
 			email,
-			username,
 			password,
 			categoryId,
 		});
@@ -32,7 +31,7 @@ exports.signup = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -65,18 +64,18 @@ exports.signin = async (req, res) => {
 				});
 			} else {
 				return res.status(400).json({
-					error: `Email and password combination doesn't match`,
+					message: `Email and password combination doesn't match`,
 				});
 			}
 		} else {
 			return res.status(400).json({
-				error: `User doesn't exists`,
+				message: `User doesn't exists`,
 			});
 		}
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -93,7 +92,7 @@ exports.signout = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 
@@ -113,7 +112,7 @@ exports.getUserQuestionFeed = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 }
@@ -136,7 +135,7 @@ exports.getUserSolutionFeed = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 }
@@ -160,7 +159,7 @@ exports.getUserCommentFeed = async (req, res) => {
 		})
 	} catch (error) {
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 }
@@ -174,7 +173,7 @@ exports.getUserInfo = async (req, res) => {
 		})
 	} catch (error) {
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 }

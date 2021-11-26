@@ -7,7 +7,6 @@ const { promisify } = require("util");
 require("@tensorflow/tfjs");
 const toxicity = require("@tensorflow-models/toxicity");
 
-
 const threshold = 0.9;
 
 const getMaliciousPredictions = (predictions, onSuccess, onError) => {
@@ -44,7 +43,7 @@ exports.postQuestion = async (req, res) => {
 						const { title, description, category } = req.body;
 						const slug = slugify(title);
 
-						let _category = await Category.findOne({ name: category })
+						let _category = await Category.findOne({ name: category });
 
 						if (!_category) {
 							const catObj = {
@@ -55,7 +54,6 @@ exports.postQuestion = async (req, res) => {
 						}
 
 						const categoryId = _category._id;
-
 
 						const question = new Question({
 							title,
@@ -94,9 +92,13 @@ exports.postQuestion = async (req, res) => {
 						});
 					})
 					.catch((err) => {
-						console.log(err);
+						if (err.code === 11000) {
+							return res.status(403).json({
+								message: "Post already exist",
+							});
+						}
 						return res.status(403).json({
-							message: err.msg,
+							message: err,
 						});
 					});
 			});
@@ -104,14 +106,13 @@ exports.postQuestion = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
 
 exports.getQuestions = async (req, res) => {
 	try {
-
 		const pageNumber = req.query.page;
 		const limit = 15;
 
@@ -123,46 +124,44 @@ exports.getQuestions = async (req, res) => {
 			questions = await Question.find({ categoryId: user.categoryId })
 				.skip(skip)
 				.limit(limit)
-				.populate("authorID", "email fullName _id username");
+				.populate("authorID", "email fullName _id");
 		} else {
 			const value = req.query.value;
 			if (query === "createdAt") {
-
 				questions = await Question.find({ categoryId: user.categoryId })
 					.sort({ createdAt: value })
 					.skip(skip)
 					.limit(limit)
-					.populate("authorID", "email fullName _id username");
+					.populate("authorID", "email fullName _id");
 			} else {
-				questions = await Question.aggregate(
-					[
-						{
-							$match: {
-								categoryId: {
-									$in: user.categoryId
-								}
-							},
-
-						},
-						{
-							$project: {
-								title: 1,
-								slug: 1,
-								description: 1,
-								authorID: 1,
-								categoryId: 1,
-								solutionId: 1,
-								createdAt: 1,
-								answerLength: { $size: "$solutionId" },
+				questions = await Question.aggregate([
+					{
+						$match: {
+							categoryId: {
+								$in: user.categoryId,
 							},
 						},
-						{ $sort: { answerLength: parseInt(value) } },
-						{ $skip: skip },
-						{ $limit: limit },
-					],
-
-				)
-				await Question.populate(questions, { path: 'authorID', select: "fullName email _id username" })
+					},
+					{
+						$project: {
+							title: 1,
+							slug: 1,
+							description: 1,
+							authorID: 1,
+							categoryId: 1,
+							solutionId: 1,
+							createdAt: 1,
+							answerLength: { $size: "$solutionId" },
+						},
+					},
+					{ $sort: { answerLength: parseInt(value) } },
+					{ $skip: skip },
+					{ $limit: limit },
+				]);
+				await Question.populate(questions, {
+					path: "authorID",
+					select: "fullName email _id",
+				});
 			}
 		}
 		return res.status(200).json({
@@ -171,7 +170,7 @@ exports.getQuestions = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -180,15 +179,15 @@ exports.getQuestionDetail = async (req, res) => {
 	try {
 		const slug = req.query.slug;
 		const question = await Question.findOne({ slug: slug })
-			.populate("authorID", "fullName email username")
+			.populate("authorID", "fullName email")
 			.populate({
 				path: "solutionId",
 				populate: {
 					path: "authorID",
-					select: "fullName email username",
+					select: "fullName email",
 				},
 			})
-			.populate("categoryId");
+			.populate("categoryId", "name");
 
 		return res.status(200).json({
 			question,
@@ -196,14 +195,13 @@ exports.getQuestionDetail = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
 
 exports.searchQuestion = async (req, res) => {
 	try {
-
 		const name = req.query.search;
 		if (name === "")
 			return res.status(200).json({
@@ -214,28 +212,30 @@ exports.searchQuestion = async (req, res) => {
 		var regex = new RegExp(name, "i");
 		let ques = [];
 		let cat = [];
-		await Question.find({ description: regex, title: regex }, { title: 1, description: 1, slug: 1, type: "question" })
+		await Question.find(
+			{ description: regex, title: regex },
+			{ title: 1, description: 1, slug: 1, type: "question" }
+		)
 			.skip(skip)
 			.limit(10)
 			.then((result) => {
-				ques = result
-			})
-		await Category.find({ name: regex }, { name: 1, slug: 1, type: "category" }).skip(skip)
-			.limit(10).then((res) => {
-				cat = res
-			})
+				ques = result;
+			});
+		await Category.find({ name: regex }, { name: 1, slug: 1, type: "category" })
+			.skip(skip)
+			.limit(10)
+			.then((res) => {
+				cat = res;
+			});
 		const results = ques.concat(cat);
 
 		return res.status(200).json({
-			results: results
-		})
+			results: results,
+		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
-
-
-
 };

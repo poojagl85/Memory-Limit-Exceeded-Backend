@@ -21,7 +21,7 @@ exports.createCategory = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -37,7 +37,7 @@ exports.getAllCategories = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -51,7 +51,7 @@ exports.getCategoryDetail = async (req, res) => {
 		).populate({
 			path: "questionId",
 			select: "title description authorID createdAt slug solutionId",
-			populate: { path: "authorID", select: "fullName email username" },
+			populate: { path: "authorID", select: "fullName email" },
 		});
 
 		return res.status(200).json({
@@ -60,7 +60,7 @@ exports.getCategoryDetail = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };

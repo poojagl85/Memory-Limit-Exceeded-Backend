@@ -89,7 +89,7 @@ exports.addSolution = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      error: "Internal Server Error",
+      message: "Internal Server Error",
     });
   }
 };
@@ -102,7 +102,7 @@ exports.getSolutionDetail = async (req, res) => {
       select: "description authorID createdAt",
       populate: {
         path: "authorID",
-        select: "username fullName email",
+        select: "fullName email",
       },
     });
     return res.status(200).json({
@@ -111,7 +111,7 @@ exports.getSolutionDetail = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      error: "Internal Server Error",
+      message: "Internal Server Error",
     });
   }
 };

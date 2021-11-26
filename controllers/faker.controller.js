@@ -12,9 +12,9 @@ exports.createFakeUser = async (req, res) => {
 		for (let i = 0; i <= 100; i++) {
 			const fullName = faker.name.findName();
 			const email = faker.internet.email();
-			const usernameArray = email.split("@");
+
 			const password = faker.internet.password();
-			const username = usernameArray[0];
+
 			const idx = parseInt(Math.random() * categories.length);
 			const categoryId = [];
 			const catId = categories[idx]._id;
@@ -28,7 +28,6 @@ exports.createFakeUser = async (req, res) => {
 			const _user = new User({
 				fullName,
 				email,
-				username,
 				password,
 				categoryId,
 			});
@@ -42,7 +41,7 @@ exports.createFakeUser = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -94,7 +93,7 @@ exports.createQuestion = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
@@ -143,7 +142,7 @@ exports.addSolution = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			error: "Internal Server Error",
+			message: "Internal Server Error",
 		});
 	}
 };
