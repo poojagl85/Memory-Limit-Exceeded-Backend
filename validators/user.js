@@ -6,7 +6,7 @@ exports.validateSignupRequest = [
 	check("categoryId").isArray({ min: 3 }).withMessage("Atleast 3 categories are required"),
 	check("password")
 		.isLength({ min: 8 })
-		.withMessage("Password must be 8 characters long")
+		.withMessage("Password must be 5 characters long")
 		.matches(/\d/)
 		.withMessage("Password must contain a number"),
 ];
