@@ -4,7 +4,7 @@
 
 - Build a functional prototype of a platform that gives students an array of digital academic and social tools to stay engaged with their studies, peers and broader university community during pandemic.
 
-## [LINK TO APP](https://peaceful-fortress-48629.herokuapp.com)
+## [LINK TO APP](https://memory-limit-exceeded.herokuapp.com)
 
 ## 🚧 Technology Stack
 
@@ -51,6 +51,8 @@ $ git clone `git clone https://github.com/<YOUR-GITHUB-USERNAME>/Memory-Limit-Ex
 # navigate to the project's directory and install all the relevant dev-dependencies
 $ cd Memory-Limit-Exceeded && npm install
 
+# Make a .env file in the src directory and include the details as per config.js
+
 # Start application
 $ npm start
 
@@ -91,6 +93,7 @@ $ npm start
    - In case some toxic text are found, the solution will not be posted
    - Else the solution will be posted.
    - Email will be sent to the author of the question with the link to the question
+     ![Email to Author of Question](https://github.com/poojagl85/Memory-Limit-Exceeded/blob/master/src/assets/Email%20Snapshot.PNG)
 3. User can visit the posted solution from the homescreen
 4. User can format the text as per his choice. (Bold, font-size, font-family etc feature has been added using tinyMCE)
 
