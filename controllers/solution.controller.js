@@ -5,6 +5,7 @@ const { promisify } = require("util");
 require("@tensorflow/tfjs");
 const toxicity = require("@tensorflow-models/toxicity");
 const { sendMail } = require("./nodemailer");
+const { URL } = require("../config");
 
 const threshold = 0.8;
 
@@ -71,7 +72,7 @@ exports.addSolution = async (req, res) => {
 
             sendMail(
               req.body.question.authorID.email,
-              `<p>A solution to your question <a href="https://peaceful-fortress-48629.herokuapp.com/question/${question.slug}">${question.title}</a> has been posted</p>`
+              `<p>A solution to your question <a href="${URL}/question/${question.slug}">${question.title}</a> has been posted</p>`
             );
             ("email sent");
             return res.status(200).json({
