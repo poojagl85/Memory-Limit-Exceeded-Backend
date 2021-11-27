@@ -56,7 +56,7 @@ exports.signin = async (req, res) => {
 
 
 
-				res.cookie("token", token, { httpOnly: true });
+				res.cookie("token", token, { secure: true });
 
 				return res.status(200).json({
 					message: "Signin successful..!",
