@@ -51,6 +51,8 @@ $ git clone `git clone https://github.com/<YOUR-GITHUB-USERNAME>/Memory-Limit-Ex
 # navigate to the project's directory and install all the relevant dev-dependencies
 $ cd Memory-Limit-Exceeded && npm install
 
+# Make a .env file and include the details as per config.js
+
 # Start application
 $ npm start
 
