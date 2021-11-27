@@ -80,7 +80,7 @@ exports.addComment = async (req, res) => {
                               .catch((err) => {
                                     console.log(err);
                                     return res.status(403).json({
-                                          message: err.msg,
+                                          message: err.msg !== undefined ? err.msg : 'Internal Server Error',
                                     });
                               });
                   });

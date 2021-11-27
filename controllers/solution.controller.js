@@ -82,7 +82,7 @@ exports.addSolution = async (req, res) => {
           })
           .catch((err) => {
             return res.status(403).json({
-              message: err.msg,
+              message: err.msg !== undefined ? err.msg : 'Internal Server Error',
             });
           });
       });

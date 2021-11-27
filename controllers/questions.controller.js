@@ -98,7 +98,7 @@ exports.postQuestion = async (req, res) => {
 							});
 						}
 						return res.status(403).json({
-							message: err.msg,
+							message: err.msg !== undefined ? err.msg : 'Internal Server Error',
 						});
 					});
 			});
