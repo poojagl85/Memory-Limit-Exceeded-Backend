@@ -4,7 +4,7 @@
 
 - Build a functional prototype of a platform that gives students an array of digital academic and social tools to stay engaged with their studies, peers and broader university community during pandemic.
 
-## [LINK TO APP](https://peaceful-fortress-48629.herokuapp.com)
+## [LINK TO APP](https://memory-limit-exceeded.herokuapp.com)
 
 ## 🚧 Technology Stack
 
